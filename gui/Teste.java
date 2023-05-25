@@ -8,11 +8,9 @@ package gui;
  *
  *  Professor: Marcos Monteiro
  */
-import objetos.*;
-import bd.*;
 public class Teste {
     public static void main(String[] args) {
-        Funcionario func = new Funcionario();
+        /*Funcionario func = new Funcionario();
         Fornecedor forn = new Fornecedor();
         String str = "52998224725";
         int ver = func.validaCpf(str);
@@ -25,7 +23,7 @@ public class Teste {
         boolean testecnpj = forn.isCnpj("14572457000185");
         System.out.println(testecnpj);
         
-        new ConectarBD();
+        //new ConectarBD();*/
         new TelaInicial();
     }
 }
