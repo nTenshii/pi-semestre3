@@ -30,7 +30,7 @@ public class ConectarBD {
     public void conecta() {
         String servidor = "jdbc:mysql://localhost:3306/mercado_bernardo";
         String usuario = "root";
-        String senha = "ehoserverkktlgdnehcachorro";
+        String senha = "P@$$w0rd";
         String driver = "com.mysql.cj.jdbc.Driver";
 
         try {
