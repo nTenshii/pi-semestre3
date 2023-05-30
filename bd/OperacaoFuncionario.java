@@ -67,12 +67,12 @@ public class OperacaoFuncionario {
     }
 
     /**
-     * 
+     * Remove o funcionário da tabela
      * @param id
      */
     public void removerFuncionario(int id) {
         String sql = "delete from Funcionario where id = {id}";
-        String funcionarioRemovido = "O funcionário abaixo foi removido do BD: \nexibirFuncionarioEspecifico(id)";
+        String funcionarioRemovido = "O funcionário abaixo foi removido do BD: \n" + exibirFuncionarioEspecifico(id);
         try {
             result = ConectarBD.getStatement().executeQuery(sql);
             JOptionPane.showConfirmDialog(null, funcionarioRemovido);
@@ -210,5 +210,4 @@ public class OperacaoFuncionario {
             return false;
         }
     }
-
 }

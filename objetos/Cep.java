@@ -9,24 +9,15 @@ package objetos;
     Professor: Marcos Monteiro
  */
 public class Cep {
-    private String tipoRua, nomeLogradouro, uf, cidade, bairro, numCep, complemento;
+    private String nomeLogradouro, uf, cidade, bairro, numCep, complemento;
 
-    public Cep(String tipoRua, String nomeLogradouro, String uf, String cidade, String bairro, String numCep, String complemento) {
-        this.tipoRua = tipoRua;
+    public Cep(String nomeLogradouro, String uf, String cidade, String bairro, String numCep, String complemento) {
         this.nomeLogradouro = nomeLogradouro;
         this.uf = uf;
         this.cidade = cidade;
         this.bairro = bairro;
         this.numCep = numCep;
         this.complemento = complemento;
-    }
-
-    public String getTipoRua() {
-        return this.tipoRua;
-    }
-
-    public void setTipoRua(String tipoRua) {
-        this.tipoRua = tipoRua;
     }
 
     public String getNomeLogradouro() {

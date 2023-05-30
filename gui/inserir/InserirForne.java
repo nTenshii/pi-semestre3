@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import gui.exibir.*;
+import gui.TelaInicial;
 import gui.atualizar.*;
 import gui.remover.*;
 
@@ -25,6 +26,7 @@ public class InserirForne extends JFrame implements ActionListener{
     JLabel lnome, lcnpj, lIE; 
     JTextField tnome, tcnpj, tIE;
     JButton ok, cancelar;
+
     
     public InserirForne(String nome, String cnpj, String ie) {
         setTitle("Inserir Fornecedor");
@@ -197,11 +199,13 @@ public class InserirForne extends JFrame implements ActionListener{
             }
         }
         if(e.getSource() == cancelar){
-            int confirmacao = JOptionPane.showConfirmDialog(rootPane,"Cancelar?","Confirmação",2);
+            int confirmacao = JOptionPane.showConfirmDialog(rootPane,"Cancelar cadastro?","Confirmação",0);
             if(confirmacao == 0){
                 tnome.setText("");
                 tcnpj.setText("");
                 tIE.setText("");
+                this.removeAll();
+                new TelaInicial();
             }
         }
     }

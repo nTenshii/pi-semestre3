@@ -10,7 +10,6 @@ package objetos;
  */
 public class Funcionario {
     private String nome, rg, cpf;
-    private int id;
 
     public Funcionario() {
     }
