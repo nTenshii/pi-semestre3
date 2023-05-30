@@ -111,6 +111,8 @@ public class InserirForne extends JFrame implements ActionListener {
                         int numLocal = Integer.parseInt(tnumLocal.getText());
                         if (!op.isCnpj(cnpj)) {
                             JOptionPane.showMessageDialog(rootPane, "O CNPJ informado não é válido.");
+                        } else if(!op.isCep(cep)){
+                            JOptionPane.showMessageDialog(rootPane, "CEP invalido");
                         } else {
                             op.inserirFornecedor(nome, cnpj, ie, cep, complemento, numLocal);
                             tnome.setText("");

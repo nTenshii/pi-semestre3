@@ -89,7 +89,10 @@ public class RemoverFunc extends JFrame implements ActionListener {
                 if(confirmacao == 0){
                     if (tid.getText().isEmpty()) {
                         JOptionPane.showMessageDialog(rootPane, "Insira um ID para remoção.");
-                    } else {
+                    } else if(op.verificarId(Integer.parseInt(tid.getText()))[0] == null){
+                        JOptionPane.showMessageDialog(rootPane, "Id invalido.");
+                    } 
+                    else {
                         int id = Integer.parseInt(tid.getText());
                         op.removerFuncionario(id);
                         tid.setText("");

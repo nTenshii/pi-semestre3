@@ -99,6 +99,9 @@ public class InserirFunc extends JFrame implements ActionListener{
                             JOptionPane.showMessageDialog(rootPane, "O RG informado não é válido.");
                         }else{
                             op.inserirFuncionario(nome, rg, cpf);
+                            tnome.setText("");
+                            trg.setText("");
+                            tcpf.setText("");
                         }
 
                     }else{

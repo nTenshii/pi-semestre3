@@ -113,12 +113,12 @@ public class AtualizarForne extends JFrame implements ActionListener {
                         int numLocal = Integer.parseInt(tnumLocal.getText());
                         if (!op.isCnpj(cnpj)) {
                             JOptionPane.showMessageDialog(rootPane, "O CNPJ informado não é válido.");
-                        } else if(!op.){
-
-                        } 
-                        else {
+                        }else if(!op.isCep(cep)){
+                            JOptionPane.showMessageDialog(rootPane, "CEP invalido");
+                        } else {
                             op.atualizarFornecedor(id, nome, cnpj, ie, cep, complemento, numLocal);
-                            JOptionPane.showMessageDialog(rootPane, "Fornecedor Atualizado com Sucesso.");
+                            dispose();
+                            new TelaInicial();
                         }
                     } else {
                         JOptionPane.showMessageDialog(rootPane,
@@ -130,7 +130,7 @@ public class AtualizarForne extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == cancelar) {
-            int confirmacao = JOptionPane.showConfirmDialog(rootPane, "Cancelar?", "Confirmação", 2);
+            int confirmacao = JOptionPane.showConfirmDialog(rootPane, "Voltar?", "Confirmação", 2);
             if (confirmacao == 0) {
                 dispose();
                 new TelaInicial();

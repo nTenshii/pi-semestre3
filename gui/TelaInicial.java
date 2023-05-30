@@ -136,8 +136,18 @@ public class TelaInicial extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == atualizarForne) {
-            dispose();
-            new AtualizarForne(null, null, null);
+            try {
+                int id = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Digite o Id do Fornecedor: "));
+                String[] dados = opFornecedor.verificarId(id);
+                if(dados[0] != null){ 
+                    dispose();
+                    new AtualizarForne(dados);
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Id inválido!");
+                }   
+            } catch (Exception a) {
+                // TODO: handle exception
+            }
         }
         if (e.getSource() == removerFunc) {
             dispose();
@@ -148,12 +158,16 @@ public class TelaInicial extends JFrame implements ActionListener {
             new RemoverForne();
         }
         if (e.getSource() == funcEsp) {
-            int id = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Digite o id do Funcionario:"));
-            String retorno = opFuncionario.exibirFuncionarioEspecifico(id);
-            if (retorno != null || retorno.equals("")) {
-                JOptionPane.showMessageDialog(rootPane, retorno);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Id inválido!");
+            try {
+                int id = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Digite o id do Funcionario:"));
+                String retorno = opFuncionario.exibirFuncionarioEspecifico(id);
+                if (!retorno.equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, retorno);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Id inválido!");
+                }   
+            } catch (Exception et) {
+                // TODO: handle exception
             }
         }
         if (e.getSource() == funcTodos) {
@@ -161,12 +175,16 @@ public class TelaInicial extends JFrame implements ActionListener {
             new FuncTodos(opFuncionario.exibirTodosFuncionarios());
         }
         if (e.getSource() == forneEsp) {
-            int id = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Digite o id do Fornecedor:"));
-            String retorno = opFornecedor.exibirFornecedorEspecifico(id);
-            if (retorno != null || retorno.equals("")) {
-                JOptionPane.showMessageDialog(rootPane, retorno);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Id inválido!");
+            try {
+                int id = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Digite o id do Fornecedor:"));
+                String retorno = opFornecedor.exibirFornecedorEspecifico(id);
+                if (!retorno.equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, retorno);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Id inválido!");
+                }   
+            } catch (Exception ea) {
+                // TODO: handle exception
             }
         }
         if (e.getSource() == forneTodos) {

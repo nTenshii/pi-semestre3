@@ -64,9 +64,9 @@ public class OperacaoFornecedor {
                 String uf = result.getString("uf");
                 String cep = result.getString("numCep");
 
-                listaFornecedores[aux] = ("ID: " + id + " | Nome: " + nome + " | CNPJ: " + cnpj + " | IE: " + ie
-                        + " | Endereço: " + logradouro + " " +
-                        numero + ", " + complemento + ", " + bairro + ", " + cidade + ", " + uf + ", " + cep + "\n");
+                listaFornecedores[aux] = ("ID: " + id + " | Nome: " + nome + " | CNPJ: " + cnpj + " | IE: " + ie +
+                    " | Endereço: " + logradouro + ", "+ numero + " - " + bairro + " - " + cidade + " - " + uf + ", " + cep + " - Complemento: "+complemento);
+                    
                 aux++;
             }
         } catch (SQLException e) {
@@ -100,9 +100,8 @@ public class OperacaoFornecedor {
                 String uf = result.getString("uf");
                 String cep = result.getString("numCep");
 
-                fornecedorEspecifico = ("ID: " + id + "| Nome: " + nome + "| CNPJ: " + cnpj + "| IE: " + ie
-                        + "\nEndereço: " + logradouro +
-                        numero + ", " + complemento + ", " + bairro + ", " + cidade + ", " + uf + ", " + cep + "\n");
+                fornecedorEspecifico = ("ID: " + id + " | Nome: " + nome + " | CNPJ: " + cnpj + " | IE: " + ie +
+                    " | Endereço: " + logradouro + ", "+ numero + " - " + bairro + " - " + cidade + " - " + uf + ", " + cep + " - Complemento: "+complemento);
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -144,11 +143,11 @@ public class OperacaoFornecedor {
      */
     public void atualizarFornecedor(int id, String nome, String cnpj, String ie, String cep, String complemento,
             int numLocal) {
-        String sql = "update Fornecedor set nome = '"+nome+"', cnpj = '"+cnpj+"', ie = '"+ie+"', (select idCep from Cep where numCep = '"+cep+"'), complemento = '"+complemento+"', numeroDoLocal = '"+numLocal+"' where id = '"+id+"'";
+        String sql = "update Fornecedor set nome = '"+nome+"', cnpj = '"+cnpj+"', ie = '"+ie+"', fk_idCEP = (select idCep from Cep where numCep = '"+cep+"'), complemento = '"+complemento+"', numeroDoLocal = '"+numLocal+"' where id = '"+id+"'";
         String fornecedorAntes = exibirFornecedorEspecifico(id);
 
         try {
-            result = ConectarBD.getStatement().executeQuery(sql);
+            ConectarBD.getStatement().executeUpdate(sql);
             String fornecedorDepois = exibirFornecedorEspecifico(id);
             JOptionPane.showMessageDialog(null, "Fornecedor Atualizado!");
             JOptionPane.showMessageDialog(null,
@@ -175,7 +174,7 @@ public class OperacaoFornecedor {
             ConectarBD.getStatement().executeUpdate(sql);
             JOptionPane.showMessageDialog(null, "Fornecedor Cadastrado com sucesso!");
         } catch (SQLException e) {
-            // TODO: handle exception
+             System.out.println("Erro na lista: " + e.getMessage());
         }
     }
 
@@ -189,11 +188,24 @@ public class OperacaoFornecedor {
         String fornecedorRemovido = "O Fornecedor abaixo foi removido do BD: \n" + exibirFornecedorEspecifico(id);
         try {
             ConectarBD.getStatement().executeUpdate(sql);
-            JOptionPane.showConfirmDialog(null, fornecedorRemovido);
+            JOptionPane.showMessageDialog(null, fornecedorRemovido);
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("Erro na lista: " + e.getMessage());
         }
+    }
+
+    public boolean isCep(String cep){
+        try {
+            String sql = "select * from CEP where numCep = '"+cep+"'";
+            result = ConectarBD.getStatement().executeQuery(sql);
+            while(result.next()){
+                return true;
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return false;
     }
 
     /**
