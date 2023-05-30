@@ -9,10 +9,11 @@ package gui;
 
     Professor: Marcos
  */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
+import bd.OperacaoFornecedor;
 import bd.OperacaoFuncionario;
 import gui.inserir.*;
 import gui.exibir.*;
@@ -26,6 +27,8 @@ public class TelaInicial extends JFrame implements ActionListener {
     JMenu menu, exibir, inserirMenu, atualizarMenu, removerMenu, funcMenu, ForneMenu;
     JMenuItem inserirFunc, inserirForne, atualizarFunc, atualizarForne, removerFunc, removerForne, funcEsp,
             funcTodos, forneEsp, forneTodos;
+    OperacaoFuncionario opFuncionario = new OperacaoFuncionario();
+    OperacaoFornecedor opFornecedor = new OperacaoFornecedor();
 
     public TelaInicial() {
         setTitle("Tela Inicial");
@@ -111,44 +114,64 @@ public class TelaInicial extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == inserirFunc) {
-            setVisible(false);
+            dispose();
             new InserirFunc();
         }
         if (e.getSource() == inserirForne) {
-            setVisible(false);
-            new InserirForne(null,null,null);
+            dispose();
+            new InserirForne(null, null, null);
         }
         if (e.getSource() == atualizarFunc) {
-            setVisible(false);
-            new AtualizarFunc();
+            try {
+                int id = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Digite o Id do Funcionario: "));
+                String[] dados = opFuncionario.verificarId(id);
+                if(dados[0] != null){ 
+                    dispose();
+                    new AtualizarFunc(dados);
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Id inválido!");
+                }   
+            } catch (Exception a) {
+                // TODO: handle exception
+            }
         }
         if (e.getSource() == atualizarForne) {
-            setVisible(false);
-            new AtualizarForne(null,null,null);
+            dispose();
+            new AtualizarForne(null, null, null);
         }
         if (e.getSource() == removerFunc) {
-            setVisible(false);
+            dispose();
             new RemoverFunc();
         }
         if (e.getSource() == removerForne) {
-            setVisible(false);
+            dispose();
             new RemoverForne();
         }
         if (e.getSource() == funcEsp) {
-
+            int id = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Digite o id do Funcionario:"));
+            String retorno = opFuncionario.exibirFuncionarioEspecifico(id);
+            if (retorno != null || retorno.equals("")) {
+                JOptionPane.showMessageDialog(rootPane, retorno);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Id inválido!");
+            }
         }
         if (e.getSource() == funcTodos) {
-            setVisible(false);
-            String[] a = {"a"};
-            new FuncTodos(a);
+            dispose();
+            new FuncTodos(opFuncionario.exibirTodosFuncionarios());
         }
         if (e.getSource() == forneEsp) {
-
+            int id = Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Digite o id do Fornecedor:"));
+            String retorno = opFornecedor.exibirFornecedorEspecifico(id);
+            if (retorno != null || retorno.equals("")) {
+                JOptionPane.showMessageDialog(rootPane, retorno);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Id inválido!");
+            }
         }
         if (e.getSource() == forneTodos) {
-            setVisible(false);
-            String[] a = {"T"};
-            new ForneTodos(a);
+            dispose();
+            new FuncTodos(opFornecedor.exibirTodosFornecedores());
         }
     }
 

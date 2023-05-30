@@ -9,16 +9,37 @@ package bd;
  *
  *  Professor: Marcos Monteiro
  */
+
 import java.sql.*;
 import javax.swing.JOptionPane;
 
 public class OperacaoFuncionario {
     ResultSet result = null;
 
+    public String[] verificarId(int id) {
+        String[] resultados = null;
+        try {
+            resultados = new String[4];
+            String minhaQuery = "SELECT * FROM Funcionario where id = '"+id+"'";
+            result = ConectarBD.getStatement().executeQuery(minhaQuery);
+            int coluna = 0;
+            if (result.next()) {
+                resultados[coluna++] = result.getString("id");
+                resultados[coluna++] = result.getString("nome");
+                resultados[coluna++] = result.getString("rg");
+                resultados[coluna++] = result.getString("cpf");
+                return resultados;
+            }
+        } catch (Exception e) {
+            System.out.println("Erro na Inclusao: " + e.getMessage());
+        }
+        return resultados;
+    }
+
     /**
      * Retorna um Array com os dados de todos os funcionários
      * 
-     * @return
+     * @return String[]
      */
     public String[] exibirTodosFuncionarios() {
         int tamanho = tamanhoTabelaFuncionarios();
@@ -32,7 +53,7 @@ public class OperacaoFuncionario {
                 String nome = result.getString("nome");
                 String rg = result.getString("rg");
                 String cpf = result.getString("cpf");
-                listaFuncionarios[aux] = ("ID: " + id + ", Nome: " + nome + ", RG: " + rg + ", CPF: " + cpf + "\n");
+                listaFuncionarios[aux] = ("ID: " + id + " | Nome: " + nome + " | RG: " + rg + " | CPF: " + cpf);
                 aux++;
             }
         } catch (SQLException e) {
@@ -45,11 +66,11 @@ public class OperacaoFuncionario {
     /**
      * Exibe um funcionário específico com base no ID
      * 
-     * @param id
-     * @return
+     * @param id int
+     * @return String
      */
     public String exibirFuncionarioEspecifico(int id) {
-        String sql = "select * from Funcionario where id = {id}";
+        String sql = "select * from Funcionario where id = '"+id+"'";
         String funcionarioEspecifico = "";
         try {
             result = ConectarBD.getStatement().executeQuery(sql);
@@ -57,7 +78,7 @@ public class OperacaoFuncionario {
                 String nome = result.getString("nome");
                 String rg = result.getString("rg");
                 String cpf = result.getString("cpf");
-                funcionarioEspecifico = ("ID: " + id + ", Nome: " + nome + ", RG: " + rg + ", CPF: " + cpf);
+                funcionarioEspecifico = ("ID: " + id + " | Nome: " + nome + " | RG: " + rg + " | CPF: " + cpf);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,14 +89,14 @@ public class OperacaoFuncionario {
 
     /**
      * Remove o funcionário da tabela
-     * @param id
+     * @param id int
      */
     public void removerFuncionario(int id) {
-        String sql = "delete from Funcionario where id = {id}";
+        String sql = "delete from Funcionario where id = '"+id+"'";
         String funcionarioRemovido = "O funcionário abaixo foi removido do BD: \n" + exibirFuncionarioEspecifico(id);
         try {
-            result = ConectarBD.getStatement().executeQuery(sql);
-            JOptionPane.showConfirmDialog(null, funcionarioRemovido);
+            ConectarBD.getStatement().executeUpdate(sql);
+            JOptionPane.showMessageDialog(null, funcionarioRemovido);
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("Erro na lista: " + e.getMessage());
@@ -85,7 +106,7 @@ public class OperacaoFuncionario {
     /**
      * Retorna o total de funcionários cadastrados na tabela
      * 
-     * @return
+     * @return int
      */
     public int tamanhoTabelaFuncionarios() {
         int tamanho = 0;
@@ -105,19 +126,18 @@ public class OperacaoFuncionario {
     /**
      * Atualiza um cadastro de Funcionário já existente
      * 
-     * @param id
-     * @param nome
-     * @param rg
-     * @param cpf
+     * @param id int
+     * @param nome String
+     * @param rg String
+     * @param cpf String
      */
     public void atualizarFuncionario(int id, String nome, String rg, String cpf) {
-        String sql = "update Funcionario set nome = '{nome}', rg = '{rg}', cpf = '{cpf}' where id = {id}";
+        String sql = "update Funcionario set nome = '"+nome+"', rg = '"+rg+"', cpf = '"+cpf+"' where id = '"+id+"'";
         String funcionarioAntes = exibirFuncionarioEspecifico(id);
-        String funcionarioDepois = null;
-
         try {
-            result = ConectarBD.getStatement().executeQuery(sql);
+            ConectarBD.getStatement().executeUpdate(sql);
             JOptionPane.showMessageDialog(null, "Funcionário Atualizado!");
+            String funcionarioDepois = exibirFuncionarioEspecifico(id);
             JOptionPane.showMessageDialog(null,
                     "Funcionário antigo: " + funcionarioAntes + "\n" + "Funcionário atualizado: " + funcionarioDepois);
         } catch (Exception e) {
@@ -127,20 +147,20 @@ public class OperacaoFuncionario {
     }
 
     public void inserirFuncionario(String nome, String rg, String cpf) {
-        String sql = "insert into Funcionario (nome, rg, cpf) values('{nome}', '{rg}', '{cpf}')";
         try {
-            result = ConectarBD.getStatement().executeQuery(sql);
-            JOptionPane.showMessageDialog(null, "Funcionário Cadastrado com sucesso!" + "\n" + "");
+            String sql = "insert into Funcionario (nome, rg, cpf) values('"+nome+"', '"+rg+"', '"+cpf+"')";
+            ConectarBD.getStatement().executeUpdate(sql);
+            JOptionPane.showMessageDialog(null, "Funcionario Cadastrado com sucesso!");
         } catch (SQLException e) {
-            // TODO: handle exception
+            JOptionPane.showMessageDialog(null, "Erro: "+e.getMessage());
         }
     }
 
     /**
      * Valida o RG com base nos critérios do SSP-SP
      * 
-     * @param rg
-     * @return
+     * @param rg String
+     * @return boolean
      */
     public boolean isRg(String rg) {
         if (rg.length() != 9) {
@@ -166,8 +186,8 @@ public class OperacaoFuncionario {
     /**
      * Confirma se o CPF informado é valido ou não
      * 
-     * @param cpf
-     * @return
+     * @param cpf String
+     * @return boolean
      */
     public boolean isCPF(String cpf) {
         if (cpf.length() != 11 || cpf == "00000000000" || cpf == "11111111111" || cpf == "22222222222"

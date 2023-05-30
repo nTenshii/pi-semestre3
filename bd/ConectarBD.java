@@ -1,4 +1,5 @@
 package bd;
+
 /*
  * Turma: A
  *  Autores: João Victor Matulis || Id de aluno: 1142445416
@@ -8,19 +9,20 @@ package bd;
  *
  *  Professor: Marcos Monteiro
  */
+
 import java.sql.*;
 import javax.swing.JOptionPane;
 
 public class ConectarBD {
     private static Connection con = null;
-    protected static Statement stm  = null;
+    protected static Statement stm = null;
 
-    public ConectarBD(){
+    public ConectarBD() {
         conecta();
-        if(estaConectado()){
-            JOptionPane.showMessageDialog(null,"Banco de dados conectado");
-        }else{
-            JOptionPane.showMessageDialog(null,"Erro na conexão com o Banco de dados");
+        if (estaConectado()) {
+            JOptionPane.showMessageDialog(null, "Banco de dados conectado");
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro na conexão com o Banco de dados");
             System.exit(0);
         }
     }
@@ -30,7 +32,7 @@ public class ConectarBD {
         String usuario = "root";
         String senha = "ehoserverkktlgdnehcachorro";
         String driver = "com.mysql.cj.jdbc.Driver";
-        
+
         try {
             Class.forName(driver);
             ConectarBD.con = DriverManager.getConnection(servidor, usuario, senha);
@@ -39,17 +41,16 @@ public class ConectarBD {
             System.out.println("erro na conexão : " + e.getMessage());
         }
     }
-    
+
     public boolean estaConectado() {
         if (ConectarBD.con != null) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    public static Statement getStatement(){
+    public static Statement getStatement() {
         try {
             return con.createStatement();
         } catch (SQLException e) {

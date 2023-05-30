@@ -9,21 +9,45 @@ package bd;
  *
  *  Professor: Marcos Monteiro
  */
+
 import java.sql.*;
 import javax.swing.JOptionPane;
 
 public class OperacaoFornecedor {
     ResultSet result = null;
 
+    public String[] verificarId(int id) {
+        String[] resultados = null;
+        try {
+            resultados = new String[7];
+            String minhaQuery = "select * from Fornecedor, Cep where Fornecedor.fk_idCep=Cep.idCep and Fornecedor.id = '"+id+"'";
+            result = ConectarBD.getStatement().executeQuery(minhaQuery);
+            int coluna = 0;
+            if (result.next()) {
+                resultados[coluna++] = result.getString("id");
+                resultados[coluna++] = result.getString("nome");
+                resultados[coluna++] = result.getString("cnpj");
+                resultados[coluna++] = result.getString("ie");
+                resultados[coluna++] = result.getString("numCep");
+                resultados[coluna++] = result.getString("complemento");
+                resultados[coluna++] = result.getString("numeroDoLocal");
+                return resultados;
+            }
+        } catch (Exception e) {
+            System.out.println("Erro na Inclusao: " + e.getMessage());
+        }
+        return resultados;
+    }
+
     /**
      * Retorna um array com todos os Fornecedores do BD.
      * 
-     * @return
+     * @return String[]
      */
     public String[] exibirTodosFornecedores() {
         int tamanho = tamanhoTabelaFornecedor();
         String[] listaFornecedores = new String[tamanho];
-        String sql = "select * from Fornecedor, Cep where Fornecedor.fk_idCep=Cep.idCep;";
+        String sql = "select * from Fornecedor, Cep where Fornecedor.fk_idCep=Cep.idCep ORDER BY id;";
         int aux = 0;
         try {
             result = ConectarBD.getStatement().executeQuery(sql);
@@ -40,8 +64,8 @@ public class OperacaoFornecedor {
                 String uf = result.getString("uf");
                 String cep = result.getString("numCep");
 
-                listaFornecedores[aux] = ("ID: " + id + "| Nome: " + nome + "| CNPJ: " + cnpj + "| IE: " + ie
-                        + "\nEndereço: " + logradouro +
+                listaFornecedores[aux] = ("ID: " + id + " | Nome: " + nome + " | CNPJ: " + cnpj + " | IE: " + ie
+                        + " | Endereço: " + logradouro + " " +
                         numero + ", " + complemento + ", " + bairro + ", " + cidade + ", " + uf + ", " + cep + "\n");
                 aux++;
             }
@@ -55,12 +79,12 @@ public class OperacaoFornecedor {
     /**
      * Retorna uma String com os dados do Fornecedor específico.
      * 
-     * @param idFornecedor
-     * @return
+     * @param idFornecedor int
+     * @return String
      */
     public String exibirFornecedorEspecifico(int idFornecedor) {
         String fornecedorEspecifico = "";
-        String sql = "select * from Fornecedor, Cep where Fornecedor.fk_idCep=Cep.idCep and Fornecedor.id = {idFornecedor};";
+        String sql = "select * from Fornecedor, Cep where Fornecedor.fk_idCep=Cep.idCep and Fornecedor.id = '"+idFornecedor+"';";
         try {
             result = ConectarBD.getStatement().executeQuery(sql);
             while (result.next()) {
@@ -90,7 +114,7 @@ public class OperacaoFornecedor {
     /**
      * Retorna o total de Fornecedores cadastrados na tabela
      * 
-     * @return
+     * @return int
      */
     public int tamanhoTabelaFornecedor() {
         int tamanho = 0;
@@ -110,23 +134,22 @@ public class OperacaoFornecedor {
     /**
      * Atualiza o fornecedor do id informado
      * 
-     * @param id
-     * @param nome
-     * @param cnpj
-     * @param ie
-     * @param cep
-     * @param complemento
-     * @param numLocal
+     * @param id int
+     * @param nome String
+     * @param cnpj String
+     * @param ie String
+     * @param cep String
+     * @param complemento String
+     * @param numLocal int
      */
     public void atualizarFornecedor(int id, String nome, String cnpj, String ie, String cep, String complemento,
-            String numLocal) {
-        String sql = "update Fornecedor set nome = '{nome}', cnpj = '{cnpj}', ie = '{ie}', (select idCep from Cep where numCep = '{cep}'), complemento = '{complemento}', numeroDoLocal = '{numLocal}' where id = {id}";
+            int numLocal) {
+        String sql = "update Fornecedor set nome = '"+nome+"', cnpj = '"+cnpj+"', ie = '"+ie+"', (select idCep from Cep where numCep = '"+cep+"'), complemento = '"+complemento+"', numeroDoLocal = '"+numLocal+"' where id = '"+id+"'";
         String fornecedorAntes = exibirFornecedorEspecifico(id);
-        String fornecedorDepois = null;
 
         try {
             result = ConectarBD.getStatement().executeQuery(sql);
-            fornecedorDepois = exibirFornecedorEspecifico(id);
+            String fornecedorDepois = exibirFornecedorEspecifico(id);
             JOptionPane.showMessageDialog(null, "Fornecedor Atualizado!");
             JOptionPane.showMessageDialog(null,
                     "Fornecedor antigo: " + fornecedorAntes + "\n" + "Fornecedor atualizado: " + fornecedorDepois);
@@ -139,18 +162,18 @@ public class OperacaoFornecedor {
     /**
      * Insere um novo fornecedor na tabela
      * 
-     * @param nome
-     * @param cnpj
-     * @param ie
-     * @param cep
-     * @param complemento
-     * @param numLocal
+     * @param nome String
+     * @param cnpj String
+     * @param ie String
+     * @param cep String
+     * @param complemento String
+     * @param numLocal int
      */
     public void inserirFornecedor(String nome, String cnpj, String ie, String cep, String complemento, int numLocal) {
-        String sql = "INSERT INTO Fornecedor(nome, cnpj, ie, fk_idCep, complemento, numeroDoLocal) VALUES ('{nome}', '{cnpj}', '{ie}', (SELECT idCep FROM Cep WHERE numCep = '{cep}'), '{complemento}', {numLocal});";
         try {
-            result = ConectarBD.getStatement().executeQuery(sql);
-            JOptionPane.showMessageDialog(null, "Funcionário Cadastrado com sucesso!" + "\n" + "");
+            String sql = "INSERT INTO Fornecedor(nome, cnpj, ie, fk_idCep, complemento, numeroDoLocal) VALUES ('"+nome+"', '"+cnpj+"', '"+ie+"', (SELECT idCep FROM Cep WHERE numCep = '"+cep+"'), '"+complemento+"', '"+numLocal+"');";
+            ConectarBD.getStatement().executeUpdate(sql);
+            JOptionPane.showMessageDialog(null, "Fornecedor Cadastrado com sucesso!");
         } catch (SQLException e) {
             // TODO: handle exception
         }
@@ -159,13 +182,13 @@ public class OperacaoFornecedor {
     /**
      * Remove o fornecedor da tabela
      * 
-     * @param id
+     * @param id int
      */
     public void removerFornecedor(int id) {
-        String sql = "delete from Fornecedor where id = {id}";
+        String sql = "delete from Fornecedor where id = '"+id+"'";
         String fornecedorRemovido = "O Fornecedor abaixo foi removido do BD: \n" + exibirFornecedorEspecifico(id);
         try {
-            result = ConectarBD.getStatement().executeQuery(sql);
+            ConectarBD.getStatement().executeUpdate(sql);
             JOptionPane.showConfirmDialog(null, fornecedorRemovido);
         } catch (Exception e) {
             // TODO: handle exception
